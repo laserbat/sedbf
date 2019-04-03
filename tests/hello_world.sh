@@ -5,10 +5,10 @@
 # Takes relatively long time to run
 # Produces this output:
 #
-# Hello, World
-# hello, world
-# Hello World
-# hello world
+# Hello, World!
+# hello, world!
+# Hello World!
+# hello world!
 
 cd "$(dirname "$0")"
 
