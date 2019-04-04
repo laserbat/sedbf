@@ -39,21 +39,17 @@ s/%(.)/\1%/
         ba
     }
 
-    # Special case when number ends in 99
-    /\$.99/{
-        s/\$099/$100/
-        s/\$199/$200/
-        ba
-    }
-
-
     # Put _ before the digit we want to increment
+    # If number ends with 0-8, mark the last digit
+    /\$..9/!s/\$.../&_/
+
+    # If number ends in 99, mark the first digit
+    # and replace 9s with 0s
+    /\$.99/s/(\$.)99/\1_00/
+
     # If number ends in 9 we replace last 9 with 0 and
     # mark the middle digit
     /\$..9/s/(\$..)./\1_0/
-
-    # Otherwise, mark the last digit
-    /\$..[0-8]/s/\$.../&_/
 
     # Increment the marked digit
     s/8_/9/
@@ -76,14 +72,9 @@ s/%(.)/\1%/
         ba
     }
 
-    /\$.00/{
-        s/\$200/$199/
-        s/\$100/$099/
-        ba
-    }
-
+    /\$..0/!s/\$.../&_/
+    /\$.00/s/(\$.)00/\1_99/
     /\$..0/s/(\$..)./\1_9/
-    /\$..[1-9]/s/\$.../&_/
 
     s/1_/0/
     s/2_/1/
@@ -139,13 +130,12 @@ s/%(.)/\1%/
 # If it is, find the matching ] and move pointer right before it
 /%\[/{
     # At least one digit is non-zero
-    /\$(..[1-9]|.[1-9].|[1-9]..)/ba
+    /\$000/!ba
 
     # Otherwise, ignore code up until the end of the loop
 
     # String of "a"s at the end of memory are used as a unary counter,
     # to count how deep inside nested brackets 
-
     s/$/a/
 
     # Create a secondary pointer right after the primary 
