@@ -46,30 +46,26 @@ s/%(.)/\1%/
         ba
     }
 
-    # Take last (or middle, if the last is 9) digit and append it to memory string
-    /\$..9/s/.*\$.(.)9.*/&\1/
-    /\$..[0-8]/s/.*\$..(.).*/&\1/
 
-    # Increment the digit
-    s/8$/9/
-    s/7$/8/
-    s/6$/7/
-    s/5$/6/
-    s/4$/5/
-    s/3$/4/
-    s/2$/3/
-    s/1$/2/
-    s/0$/1/
+    # Put _ before the digit we want to increment
+    # If number ends in 9 we replace last 9 with 0 and
+    # mark the middle digit
+    /\$..9/s/(\$..)./\1_0/
 
-    # If original number ended in 9, replace 9 with 0 and middle digit with incremented
-    # value
-    /\$..9/{
-        s/(.*)(\$.).9(.*)(.)/\1\2\40\3/
-        ba
-    }
+    # Otherwise, mark the last digit
+    /\$..[0-8]/s/\$.../&_/
 
-    # Replace last digit with incremented value
-    s/(.*)(\$..).(.*)(.)/\1\2\4\3/
+    # Increment the marked digit
+    s/8_/9/
+    s/7_/8/
+    s/6_/7/
+    s/5_/6/
+    s/4_/5/
+    s/3_/4/
+    s/2_/3/
+    s/1_/2/
+    s/0_/1/
+
     ba
 }
 
@@ -86,25 +82,19 @@ s/%(.)/\1%/
         ba
     }
 
-    /\$..0/s/.*\$.(.)0.*/&\1/
-    /\$..[1-9]/s/.*\$..(.).*/&\1/
+    /\$..0/s/(\$..)./\1_9/
+    /\$..[1-9]/s/\$.../&_/
 
-    s/1$/0/
-    s/2$/1/
-    s/3$/2/
-    s/4$/3/
-    s/5$/4/
-    s/6$/5/
-    s/7$/6/
-    s/8$/7/
-    s/9$/8/
+    s/1_/0/
+    s/2_/1/
+    s/3_/2/
+    s/4_/3/
+    s/5_/4/
+    s/6_/5/
+    s/7_/6/
+    s/8_/7/
+    s/9_/8/
 
-    /\$..0/{
-        s/(.*)(\$.).0(.*)(.)/\1\2\49\3/
-        ba
-    }
-
-    s/(.*)(\$..).(.*)(.)/\1\2\4\3/
     ba
 }
 
@@ -127,7 +117,7 @@ s/%(.)/\1%/
     # Only executed if we have a byte in our buffer
     /![0-9]{3}/{
         # Copies the byte into current memory cell
-        s/(.*)!(...)(.*)\$...(.*)/\1!\3\$\2\4/
+        s/!(...)(.*)\$.../!\2\$\1/
         ba
     }
 
