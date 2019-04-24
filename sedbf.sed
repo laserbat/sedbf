@@ -41,11 +41,11 @@ s/%(.)/\1%/
 
     # Put _ before the digit we want to increment
     # If number ends with 0-8, mark the last digit
-    /:..9/!s/:.../&_/
+    s/:..[^9]/&_/
 
     # If number ends in 99, mark the first digit
     # and replace 9s with 0s
-    /:.99/s/(:.)99/\1_00/
+    s/(:.)99/\1_00/
 
     # If number ends in 9 we replace last 9 with 0 and
     # mark the middle digit
@@ -58,7 +58,7 @@ s/%(.)/\1%/
     #    y/876543210/987654321/
     #    G
     #    s/.*(.)_.*\n(.*)._/\2\1/
-    # But it also is much, much slower
+    # But it is also much, much slower
 
     s/8_/9/
     s/7_/8/
@@ -78,8 +78,8 @@ s/%(.)/\1%/
         ba
     }
 
-    /:..0/!s/:.../&_/
-    /:.00/s/(:.)00/\1_99/
+    s/:..[^0]/&_/
+    s/(:.)00/\1_99/
     s/(:..)0/\1_9/
 
     s/1_/0/
