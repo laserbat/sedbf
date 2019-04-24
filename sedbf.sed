@@ -18,8 +18,7 @@
 s/[^][+,.<>!0-9-]//g
 
 # Prepare the state of our virtual machine, by creating instruction pointer and a single empty memory cell
-s/^/% /
-s/$/#:000;/
+s/.*/% &#:000;/
 
 # Main loop
 # 'ba' instruction returns to this label
@@ -53,6 +52,14 @@ s/%(.)/\1%/
     s/(:..)9/\1_0/
 
     # Increment the marked digit
+
+    # There is a much shorter method:
+    #    h
+    #    y/876543210/987654321/
+    #    G
+    #    s/.*(.)_.*\n(.*)._/\2\1/
+    # But it also is much, much slower
+
     s/8_/9/
     s/7_/8/
     s/6_/7/
